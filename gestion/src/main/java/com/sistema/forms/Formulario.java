@@ -11,7 +11,6 @@ import javax.swing.JOptionPane;
 public class Formulario extends javax.swing.JFrame {
 
     private List<Cliente> lista = new ArrayList<>(); 
-    private ClienteDao dao = new ClienteDao();
             
     public Formulario() {
         initComponents();

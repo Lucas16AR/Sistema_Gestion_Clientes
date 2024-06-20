@@ -1,5 +1,6 @@
 package com.sistema.dao;
 
+import com.sun.tools.javac.util.StringUtils;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
@@ -9,16 +10,25 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
+import com.mysql.cj.util.StringUtils;
+import com.mysql.cj.jdbc.Driver;
 import com.sistema.models.Cliente;
+
+
 
 public class ClienteDao {
     
     public Connection conectar() {
+        // String baseDeDatos = "clientes_gestion_java";
         String usuario = "lucas";
         String password = "Lucas1608#AR";
-        String driver = "com.mysql.cj.jdbc.Driver";
-        String conexionUrl = "jdbc:mysql://localhost:3306/gestion?allowPublicKeyRetrieval=true&useSSL=false";      
+        // String host = "localhost";
+        // String puerto = "3306";
+        String driver = "com.mysql.jdbc.Driver";
+        // String conexionUrl = "jdbc:mysql://" + host + ":" + puerto + "/" + baseDeDatos + "?useSSL=false";
+        String conexionUrl = "jdbc:mysql://localhost:3306/clientes_gestion_java?allowPublicKeyRetrieval=true&useSSL=false";
+        
+    
         Connection conexion = null;
         
         try {
@@ -38,6 +48,7 @@ public class ClienteDao {
     }
     
     public void agregar(Cliente cliente) {
+       
         try {
             Connection conexion = conectar();
             String sql = "INSERT INTO `clientes` (`id`, `nombre`, `apellido`, `telefono`, `email`) VALUES (NULL, '" 
@@ -52,6 +63,7 @@ public class ClienteDao {
     }
     
     public void actualizar(Cliente cliente) {
+       
         try {
             Connection conexion = conectar();
             String sql = "UPDATE `clientes` SET `nombre` = '" + cliente.getNombre() 
@@ -67,14 +79,6 @@ public class ClienteDao {
         }   
     }
     
-    public void guardar(Cliente cliente) {
-        if (cliente.getId() == null) {
-            agregar(cliente);
-        } else {
-            actualizar(cliente);
-        }
-    }    
-
     public List<Cliente> listar() {
         List<Cliente> listado = new ArrayList<>();
         
@@ -103,14 +107,22 @@ public class ClienteDao {
     }
     
     public void eliminar(String id) {
-    try {
-        Connection conexion = conectar();
-        String sql = "DELETE FROM `clientes` WHERE `clientes`.`id` = " + id;
-      
-        Statement statement = conexion.createStatement();
-        statement.execute(sql);
-    } catch (Exception ex) {
-        Logger.getLogger(ClienteDao.class.getName()).log(Level.SEVERE, null, ex);
-        }   
+        try {
+            Connection conexion = conectar();
+            String sql = "DELETE FROM `clientes` WHERE `clientes`.`id` = " + id;
+          
+            Statement statement = conexion.createStatement();
+            statement.execute(sql);
+        } catch (Exception ex) {
+            Logger.getLogger(ClienteDao.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    public void guardar(Cliente cliente) {
+        if (StringUtils.isEmptyOrWhitespaceOnly(cliente.getId())) {
+            agregar(cliente);
+        } else {
+            actualizar(cliente);
+        }
     }
 }
